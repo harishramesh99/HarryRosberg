@@ -84,7 +84,7 @@ const GoogleLogo = () => (
         ))}
       </div>
 
-      <p className="text-gray-300 leading-relaxed">"{review.text}"</p>
+      <p className="text-gray-300 leading-relaxed">{review.text}</p>
     </div>
   );
 };
@@ -98,6 +98,10 @@ const ReviewCarousel = ({ reviews, googleReviewUrl }: ReviewCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % reviews.length);
+  };
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isAutoPlaying) {
@@ -106,11 +110,7 @@ const ReviewCarousel = ({ reviews, googleReviewUrl }: ReviewCarouselProps) => {
       }, 5000);
     }
     return () => clearInterval(interval);
-  }, [isAutoPlaying, activeIndex]);
-
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % reviews.length);
-  };
+  }, [isAutoPlaying, activeIndex, handleNext]);
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length);

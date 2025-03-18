@@ -21,8 +21,8 @@ export async function middleware(request: NextRequest) {
   ]
   if (
     skipPaths.some(path => request.nextUrl.pathname.startsWith(path)) ||
-    hostname === 'localhost:3001' ||
-    hostname === 'bytesma.com' ||
+    hostname === 'localhost:3002' ||
+    hostname === 'harryrosberg.ca' ||
     !currentHost ||
     currentHost === 'www'
   ) {
