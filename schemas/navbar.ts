@@ -8,6 +8,13 @@ export default {
   type: "document",
   icon: BiNavigation,
   fields: [
+
+    defineField({
+      name: "userId",
+      title: "User ID",
+      type: "string",
+      description: "Unique identifier for the user",
+    }),
     defineField({
       name: "logo",
       title: "Logo",

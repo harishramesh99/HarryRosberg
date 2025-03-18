@@ -1,12 +1,16 @@
 import { groq } from "next-sanity";
 import client from "./sanity.client";
 
-export async function getProfile() {
+// Updated to filter by userId
+export async function getProfile(userId?: string) {
+  const filter = userId ? `&& userId == $userId` : '';
   return client.fetch(
-    groq`*[_type == "profile"]{
+    groq`*[_type == "profile" ${filter}]{
       _id,
+      userId,
       fullName,
       headline,
+      "slug": slug.current,
       profileImage {
         alt, 
         "image": asset->url
@@ -16,33 +20,61 @@ export async function getProfile() {
       fullBio,
       email,
       "resumeURL": resumeURL.asset->url,
-      socialLinks,
-       
-
-    }`
+      socialLinks
+    }`,
+    userId ? { userId } : {}
   );
 }
 
-export async function getJob() {
+export async function getProfileBySlug(slug: string) {
   return client.fetch(
-    groq`*[_type == "job"]{
+    groq`*[_type == "profile" && slug.current == $slug][0]{
       _id,
+      userId,
+      fullName,
+      headline,
+      "slug": slug.current,
+      profileImage {
+        alt, 
+        "image": asset->url
+      },
+      shortBio,
+      location,
+      fullBio,
+      email,
+      "resumeURL": resumeURL.asset->url,
+      socialLinks
+    }`,
+    { slug }
+  );
+}
+
+// Updated to filter by userId
+export async function getJob(userId?: string) {
+  const filter = userId ? `&& userId == $userId` : '';
+  return client.fetch(
+    groq`*[_type == "job" ${filter}]{
+      _id,
+      userId,
       name,
       jobTitle,
       "logo": logo.asset->url,
       url,
       description,
       startDate,
-      endDate,
-    }`
+      endDate
+    }`,
+    userId ? { userId } : {}
   );
 }
 
-
-export async function getBlogPosts() {
+// Updated to filter by userId
+export async function getBlogPosts(userId?: string) {
+  const filter = userId ? `&& userId == $userId` : '';
   return client.fetch(
-    groq`*[_type == "post"] | order(publishedAt desc) {
+    groq`*[_type == "post" ${filter}] | order(publishedAt desc) {
       _id,
+      userId,
       title,
       "slug": slug.current,
       publishedAt,
@@ -51,67 +83,39 @@ export async function getBlogPosts() {
         alt,
         "image": asset->url
       }
-    }`
+    }`,
+    userId ? { userId } : {}
   );
 }
 
-/*export async function getSinglePost(slug: string) {
-  return client.fetch(
-    groq`*[_type == "post" && slug.current == $slug][0]{
-      _id,
-      title,
-      publishedAt,
-      excerpt,
-      mainImage {
-        alt,
-        "image": asset->url
-      },
-      body
-    }`,
-    { slug }
-  );
-}*/
-
-/*export async function getSkills() {
-  return client.fetch(
-    groq`*[_type == "skill"]{
-      _id,
-      title,                  // Title of the skill
-      description,            // Description of the skill
-      icon,                   // Icon for the skill (emoji or font-awesome class)
-      highlight,
-      Headline              // Boolean to check if the skill is highlighted
-    }`
-  );
-}*/
-export async function getSkills() {
+// Updated to filter by userId
+export async function getSkills(userId?: string) {
   try {
-    //console.log('Starting getSkills fetch...');
-    const query = groq`*[_type == "skills"]{
+    const filter = userId ? `&& userId == $userId` : '';
+    const query = groq`*[_type == "skills" ${filter}]{
       _id,
+      userId,
       title,
       description,
       icon,
       highlight,
       Headline
     }`;
-    //console.log('Query:', query);
-    const data = await client.fetch(query);
-    //console.log('Skills Data Received:', data);
+    
+    const data = await client.fetch(query, userId ? { userId } : {});
     return data;
   } catch (error) {
-    //console.error('Error fetching skills:', error);
     throw error;
   }
 }
 
-
-
-
-export async function getProjects() {
+// Updated to filter by userId
+export async function getProjects(userId?: string) {
+  const filter = userId ? `&& userId == $userId` : '';
   return client.fetch(
-    groq`*[_type == "project"] {
+    groq`*[_type == "project" ${filter}] {
       _id,
+      userId,
       name,
       "slug": slug.current,
       tagline,
@@ -120,15 +124,20 @@ export async function getProjects() {
         "image": coverImage.asset->url,
         "alt": coverImage.alt
       }
-    }`
+    }`,
+    userId ? { userId } : {}
   );
 }
 
-export async function getsingleProject(slug: string | undefined) {
+// Updated to filter by userId
+export async function getsingleProject(slug: string | undefined, userId?: string) {
   if (!slug) return null;
+  
+  const filter = userId ? `&& userId == $userId` : '';
   return client.fetch(
-    groq`*[_type == "project" && slug.current == $slug][0]{
+    groq`*[_type == "project" && slug.current == $slug ${filter}][0]{
       name,
+      userId,
       tagline,
       "coverImage": {
         "image": coverImage.asset->url,
@@ -137,25 +146,31 @@ export async function getsingleProject(slug: string | undefined) {
       description,
       projectUrl
     }`,
-    { slug }
+    { slug, ...(userId ? { userId } : {}) }
   );
 }
-export async function getCaseStudies() {
-  const query = `*[_type == "caseStudy"] {
+
+// Updated to filter by userId
+export async function getCaseStudies(userId?: string) {
+  const filter = userId ? `&& userId == $userId` : '';
+  const query = `*[_type == "caseStudy" ${filter}] {
     _id,
+    userId,
     title,
     description,
     solutions,
     metrics
   }`;
-  return await client.fetch(query);
+  return await client.fetch(query, userId ? { userId } : {});
 }
 
-
-export async function reviewsQuery() {
+// Updated to filter by userId
+export async function reviewsQuery(userId?: string) {
+  const filter = userId ? `&& userId == $userId` : '';
   return client.fetch(
-    groq`*[_type == "review"] {
+    groq`*[_type == "review" ${filter}] {
       _id,
+      userId,
       author_name,
       author_url,
       "profile_photo_url": profile_photo_url.asset->url,
@@ -163,35 +178,24 @@ export async function reviewsQuery() {
       text,
       time,
       isGoogleReview
-    }`
+    }`,
+    userId ? { userId } : {}
   );
 }
 
-// sanity/sanity.query.ts
-export async function getNavbar() {
-  try {
-    const query = `*[_type == "navbar"][0] {
-      logo {
-        asset-> {
-          url
-        },
-        alt
-      },
-      logoText,
-      menuItems[] {
-        _key,
-        text,
-        href,
-        isExternal,
-        order
-      }
-    }`;
-
-    const navbar = await client.fetch(query);
-    return navbar || null; // Return null if no navbar document exists
-  } catch (error) {
-    console.error('Error fetching navbar:', error);
-    return null; // Return null on error
-  }
+// Updated to allow filtering navbar by userId (if needed)
+export async function getNavbar(userId?: string) {
+  const filter = userId ? `&& userId == $userId` : '';
+  const query = `*[_type == "navbar" ${filter}][0] {
+    logoText,
+    userId,
+    menuItems[] {
+      _key,
+      text,
+      href,
+      isExternal,
+      order
+    }
+  }`;
+  return await client.fetch(query, userId ? { userId } : {});
 }
-

@@ -7,6 +7,12 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
+      name: "userId",
+      title: "User ID",
+      type: "string",
+      description: "Unique identifier for the user",
+    }),
+    defineField({
       name: 'author_name',
       title: 'Author Name',
       type: 'string',

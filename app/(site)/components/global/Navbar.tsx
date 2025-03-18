@@ -45,22 +45,12 @@ export default function Navbar({ data }: NavbarProps) {
   return (
     <header className="fixed top-0 left-0 right-0 py-4 md:py-6 px-4 md:px-16 border-b border-zinc-800 z-30 bg-black/80 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 md:gap-3">
-          {data?.logo?.asset?.url ? (
-            <Image
-              src={data.logo.asset.url}
-              alt={data.logo.alt || "Site Logo"}
-              width={40}
-              height={40}
-              className="object-contain rounded-full w-8 h-8 md:w-10 md:h-10"
-            />
-          ) : null}
-          {data?.logoText && (
-            <h4 className="text-lg md:text-xl font-semibold bg-gradient-to-r from-orange-500 to-orange-800 bg-clip-text text-transparent">
-              {data.logoText}
-            </h4>
-          )}
-        </Link>
+      <Link href="/" className="flex items-center gap-2 md:gap-3">
+  <h4 className="text-lg md:text-xl font-semibold bg-gradient-to-r from-orange-500 to-orange-800 bg-clip-text text-transparent">
+    {data?.logoText || "My Portfolio"} {/* Fallback to default text */}
+  </h4>
+</Link>
+
         
         {/* Desktop Navigation */}
         <nav className="hidden md:block">

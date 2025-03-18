@@ -8,6 +8,12 @@ const project = {
   type: "document",
   icon: BiPackage,
   fields: [
+    defineField({
+      name: "userId",
+      title: "User ID",
+      type: "string",
+      description: "Unique identifier for the user",
+    }),
     {
       name: "name",
       title: "Name",

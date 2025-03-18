@@ -8,6 +8,12 @@ const profile = {
   icon: BiUser,
   fields: [
     defineField({
+      name: "userId",
+      title: "User ID",
+      type: "string",
+      description: "Unique identifier for the user",
+    }),
+    defineField({
       name: "fullName",
       title: "Full Name",
       type: "string",

@@ -9,6 +9,12 @@ const skills = {
   icon: BiUser,
   fields: [
     defineField({
+      name: "userId",
+      title: "User ID",
+      type: "string",
+      description: "Unique identifier for the user",
+    }),
+    defineField({
       name: "title",
       title: "Skill Title",
       type: "string",

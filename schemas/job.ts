@@ -6,6 +6,7 @@ const job = {
   type: "document",
   icon: BiBriefcase,
   fields: [
+    
     {
       name: "name",
       title: "Company Name",
